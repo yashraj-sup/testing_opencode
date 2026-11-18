@@ -2,6 +2,8 @@ import random
 
 MIN_NUMBER = 1
 MAX_NUMBER = 100
+MAX_GUESSES = 5
+CLOSE_GAP = 10
 
 
 def get_guess():
@@ -20,18 +22,28 @@ def get_guess():
 
 def play_round():
     secret = random.randint(MIN_NUMBER, MAX_NUMBER)
-    guesses = 0
 
-    while True:
+    for guesses in range(1, MAX_GUESSES + 1):
         guess = get_guess()
-        guesses += 1
+        remaining = MAX_GUESSES - guesses
         if guess < secret:
-            print("Too low! Try a higher number.")
+            if secret - guess > CLOSE_GAP:
+                print("Too low! Try a higher number.")
+            else:
+                print("Low! Pick a higher number.")
         elif guess > secret:
-            print("Too high! Try a lower number.")
+            if guess - secret > CLOSE_GAP:
+                print("Too high! Try a lower number.")
+            else:
+                print("High! Pick a lower number.")
         else:
             print(f"Correct! You guessed it in {guesses} guess" + ("es." if guesses != 1 else "."))
             return
+
+        if remaining:
+            print(f"{remaining} guess" + ("es" if remaining != 1 else "") + " left.")
+        else:
+            print(f"Out of guesses! The number was {secret}.")
 
 
 def main():
